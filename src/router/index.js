@@ -10,7 +10,6 @@ const DepartmentWorkOrderDeatils = () => import('@/pages/taskDetailsPage/Departm
 const DepartmentServiceSignature = () => import('@/pages/taskMessagePage/departmentService/DepartmentServiceSignature')
 const DepartmentServiceBill = () => import('@/pages/taskMessagePage/departmentService/DepartmentServiceBill')
 const DepartmentServiceIssueReport = () => import('@/pages/taskMessagePage/departmentService/DepartmentServiceIssueReport')
-const DepartmentServiceFillConsumable = () => import('@/pages/taskMessagePage/departmentService/DepartmentServiceFillConsumable')
 Vue.use(Router)
 
 let baseRoute  = [
@@ -53,11 +52,6 @@ let baseRoute  = [
     path: '/departmentServiceIssueReport',
     name: 'departmentServiceIssueReport',
     component:  DepartmentServiceIssueReport
-  },
-  {
-    path: '/departmentServiceFillConsumable',
-    name: 'departmentServiceFillConsumable',
-    component: DepartmentServiceFillConsumable
   }
 ];
 let router = new Router({

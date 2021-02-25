@@ -3,7 +3,7 @@
     <div class="worker-show">
       <!-- 顶部导航栏 -->
       <HeaderTop :title="navTopTitle">
-        <van-icon name="arrow-left" slot="left" @click="backTo"></van-icon> 
+        <van-icon name="arrow-left" slot="left" @click="backTo"></van-icon>
       </HeaderTop>
       <!-- 内容部分 -->
       <div class="content-top">
@@ -24,16 +24,9 @@
         </div>
       </div>
       <div class="content-bottom">
-        <p class="back-home"  @click="fillConsumable" v-show="showFillConsumable">填写耗材</p>
         <p class="quit-account" @click="sure">确认</p>
       </div>
     </div>
-    <van-dialog v-model="issueShow" title="是否反馈该问题到调度中心" show-cancel-button  :close-on-click-overlay="true"
-      confirm-button-text="不上报" cancel-button-text="上报问题"
-      @confirm="noReportProblem"
-      @cancel="reportProblem"
-      >
-    </van-dialog>
      <van-dialog v-model="isBackShow"  title="返回上级将不会保存本科室检查结果,确定返回?" show-cancel-button
         @confirm="isBackSure" @cancel="isBackCancel"
       >
@@ -59,22 +52,19 @@
     },
     data() {
       return {
-        issueShow: false,
         isBackShow: false,
-        showFillConsumable: false,
         currentDepartmentId: '',
         currentDepartmentName: '',
         consumableMsgList: []
       }
     },
-    
+
     mounted () {
       // 控制设备物理返回按键测试
       if (!IsPC()) {
         pushHistory();
         this.gotoURL(() => {
           pushHistory();
-          this.issueShow = false;
           this.isBackShow = true;
           if (this.isBackShow)  {
             this.isBackShow = true;
@@ -94,12 +84,10 @@
     },
 
     activated () {
-      this.issueShow = false;
       if (!IsPC()) {
         pushHistory();
         this.gotoURL(() => {
           pushHistory();
-          this.issueShow = false;
           this.isBackShow = true;
           if (this.isBackShow)  {
             this.isBackShow = true;
@@ -116,10 +104,10 @@
 		    depId: this.currentDepartmentId
       })
     },
-    
+
     watch: {
     },
-    
+
     computed:{
       ...mapGetters([
         'navTopTitle',
@@ -166,7 +154,6 @@
 
       //返回上一页
       backTo () {
-        this.issueShow = false;
         this.isBackShow = true;
         if (this.isBackShow)  {
           this.isBackShow = true;
@@ -204,13 +191,6 @@
         }
       },
 
-       // 填写耗材
-      fillConsumable () {
-        this.$router.push({path: 'departmentServiceFillConsumable'});
-        this.changeTitleTxt({tit:'填写耗材'});
-        setStore('currentTitle','填写耗材')
-      },
-      
       // 查询检查项
       getExamineItems (data) {
         queryExamineItems(data).then((res) => {
@@ -313,7 +293,7 @@
             this.changeCurrentDepartmentServiceCheckedItemId(temporaryCheckItemInfo);
             temporaryDepartmentId.push(this.currentDepartmentServiceCheckedItemId);
             temporaryOfficeList.push(
-              { 
+              {
                 officeList: repeArray(temporaryDepartmentId),
                 taskId: this.taskId,
                 depId: this.currentDepartmentId
@@ -327,7 +307,7 @@
           this.changeCurrentDepartmentServiceCheckedItemId(temporaryCheckItemInfo);
           temporaryDepartmentId.push(this.currentDepartmentServiceCheckedItemId);
           temporaryOfficeList.push(
-            { 
+            {
               officeList: repeArray(temporaryDepartmentId),
               taskId: this.taskId,
               depId: this.currentDepartmentId
@@ -359,9 +339,8 @@
           if (this.consumableMsgList[index].right == true) {
             this.consumableMsgList[index].right = false
           };
-          this.issueShow = true
+          this.reportProblem()
         };
-        this.showFillConsumable = false;
         // 重新查询检查项并给相关字段赋值
         this.getExamineItems({
           proId: this.proId,
@@ -375,17 +354,6 @@
         this.$router.push({path: 'departmentServiceIssueReport'});
         this.changeTitleTxt({tit:'巡检问题上报'});
         setStore('currentTitle','巡检问题上报')
-      },
-
-      // 不上报问题弹框
-      noReportProblem () {
-        this.storageCompleteCheckItemInfo(1);
-        this.showFillConsumable = true;
-        // 重新查询检查项并给相关字段赋值
-        this.getExamineItems({
-          proId: this.proId,
-          depId: this.currentDepartmentId
-        })
       },
 
       // 存储完成巡检的科室编号
@@ -402,7 +370,7 @@
           } else {
             temporaryDepartmentId.push(this.departmentServiceOfficeId);
             temporaryOfficeList.push(
-              { 
+              {
                 officeList: repeArray(temporaryDepartmentId),
                 taskId: this.taskId
               }
@@ -411,7 +379,7 @@
         } else {
           temporaryDepartmentId.push(this.departmentServiceOfficeId);
           temporaryOfficeList.push(
-            { 
+            {
               officeList: repeArray(temporaryDepartmentId),
               taskId: this.taskId
             }

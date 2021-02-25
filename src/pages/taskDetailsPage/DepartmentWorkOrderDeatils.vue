@@ -3,7 +3,7 @@
     <div class="worker-show">
       <!-- 顶部导航栏 -->
       <HeaderTop :title="navTopTitle">
-        <van-icon name="arrow-left" slot="left" @click="backTo"></van-icon> 
+        <van-icon name="arrow-left" slot="left" @click="backTo"></van-icon>
       </HeaderTop>
       <!-- 内容部分 -->
       <div class="content-top">
@@ -70,7 +70,7 @@
         departmentNo: ''
       }
     },
-    
+
     mounted() {
       // 控制设备物理返回按键测试
       if (!IsPC()) {
@@ -93,10 +93,10 @@
       };
       this.getOneDepartmentService()
     },
-    
+
     watch: {
     },
-    
+
     computed:{
       ...mapGetters([
         'navTopTitle',
@@ -155,7 +155,7 @@
         queryOneDepartmentService(this.taskId).then((res) => {
           if(res && res.data.code == 200) {
             let temporaryOneRepairsMsg = res.data.data;
-            temporaryOneRepairsMsg.spaces = JSON.parse(res.data.data.spaces);
+            // temporaryOneRepairsMsg.spaces = JSON.parse(res.data.data.spaces);
             for (let item of temporaryOneRepairsMsg.spaces) {
               item.checked = false
             };
@@ -273,7 +273,7 @@
           } else {
             temporaryDepartmentId.push(departmentNumber);
             temporaryOfficeList.push(
-              { 
+              {
                 officeList: repeArray(temporaryDepartmentId),
                 taskId: this.taskId
               }
@@ -282,7 +282,7 @@
         } else {
           temporaryDepartmentId.push(departmentNumber);
           temporaryOfficeList.push(
-            { 
+            {
               officeList: repeArray(temporaryDepartmentId),
               taskId: this.taskId
             }
@@ -302,7 +302,7 @@
             temporaryDepartmentNumber[temporaryIndex]['number'] = departmentNumber
           } else {
             temporaryDepartmentNumber.push(
-              { 
+              {
                 number: departmentNumber,
                 taskId: this.taskId
               }
@@ -310,7 +310,7 @@
           };
         } else {
           temporaryDepartmentNumber.push(
-            { 
+            {
               number:departmentNumber,
               taskId: this.taskId
             }
@@ -334,7 +334,7 @@
           this.$toast('请完成所有房间的巡检');
           return
         };
-        updateDepartmentServiceTaskBeSigned(this.proId, this.taskId).then((res) => {
+        updateDepartmentServiceTaskBeSigned(this.proId, this.taskId,this.workerId,this.userName).then((res) => {
           if (res && res.data.code == 200) {
             // 删除当前任务存储的扫码校验校验通过的科室编号信息
             let temporaryCurrentDepartmentNUmInfo = this.isDepartmentServiceVerifySweepCode.filter((item) => { return item.taskId !== this.taskId});

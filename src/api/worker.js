@@ -15,6 +15,14 @@ export function getNewWork (proId,workerId) {
  *
 */
 
+// 查询任务数量
+export function queryTaskCount (proId,workerId) {
+  return request({
+    url: `baseData/taskCount/${proId}/${workerId}`,
+    method: 'get'
+  })
+}
+
 // 巡检任务列表查询
 export function queryDepartmentServiceList (data) {
   return request({
@@ -69,9 +77,9 @@ export function postCheckResult(data) {
 };
 
 // 完成接口(更新任务状态为待签字)
-export function updateDepartmentServiceTaskBeSigned(proId,taskId) {
+export function updateDepartmentServiceTaskBeSigned(proId,taskId,cleanId,cleanName) {
   return request({
-    url: `xjTask/updateToCompleteXjTask/${proId}/${taskId}`,
+    url: `xjTask/updateToCompleteXjTask/${proId}/${taskId}/${cleanId}/${cleanName}`,
     method: 'put'
   })
 };

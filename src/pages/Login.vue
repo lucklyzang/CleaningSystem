@@ -4,7 +4,7 @@
       <div class="bg-icon">
         <img :src="logoTopPng" alt="">
          <div class="bg-text">
-          工程维修
+          保洁管理
         </div>
       </div>
     </div>
@@ -65,7 +65,7 @@ export default {
     if (!IsPC()) {
       let that = this;
       pushHistory()
-      that.gotoURL(() => { 
+      that.gotoURL(() => {
         pushHistory();
         this.$router.push({path: '/'});  //输入要返回的上一级路由地址
       });
@@ -77,10 +77,10 @@ export default {
       let resizeHeight = document.documentElement.clientHeight || document.body.clientHeight;
       if (resizeHeight < originalHeight) {
         return (()=>{
-          this.$refs['bgIconWrapper'].style.cssText='flex:none;height:220px' 
+          this.$refs['bgIconWrapper'].style.cssText='flex:none;height:220px'
         })()
       } else {
-        this.$refs['bgIconWrapper'].style.cssText='flex:1;height:0' 
+        this.$refs['bgIconWrapper'].style.cssText='flex:1;height:0'
       }
     };
   },
@@ -98,7 +98,7 @@ export default {
       this.password = getStore('userPassword') ? getStore('userPassword') : '';
     },
 
-    
+
     // 注册channel
     getChannel (data) {
       return new Promise((resolve,reject) => {
@@ -181,27 +181,27 @@ export default {
     async loginEvent () {
       const resultOne = await this.login();
       const resultTwo = await this.queryDepartmentMsg(resultOne.proId);
-      if (!IsPC()) {
-        // 注册channel
-        if (window.android.getChannelId()) {
-          try {
-            await this.getChannel({proId:resultOne.proId,workerId:resultOne.id,type:2,channelId:window.android.getChannelId()});
-          } catch (err) {
-            this.$dialog.alert({
-              message: `${err.message}`,
-              closeOnPopstate: true
-            }).then(() => {})
-          }
-        } else {
-          this.$toast('未获取到channelId')
-        }
-      };
+      // if (!IsPC()) {
+      //   // 注册channel
+      //   if (window.android.getChannelId()) {
+      //     try {
+      //       await this.getChannel({proId:resultOne.proId,workerId:resultOne.id,type:2,channelId:window.android.getChannelId()});
+      //     } catch (err) {
+      //       this.$dialog.alert({
+      //         message: `${err.message}`,
+      //         closeOnPopstate: true
+      //       }).then(() => {})
+      //     }
+      //   } else {
+      //     this.$toast('未获取到channelId')
+      //   }
+      // };
       this.$router.push({path:'/home'});
-      this.changeTitleTxt({tit:'工程管理系统'});
+      this.changeTitleTxt({tit:'保洁管理系统'});
       setStore('departmentMessage', resultTwo);
       window.location.reload()
     }
-  } 
+  }
 }
 </script>
 <style lang="less" scoped>
@@ -235,7 +235,7 @@ export default {
           }
           &:after {
             display: none
-          } 
+          }
         }
       }
     };
@@ -276,11 +276,11 @@ export default {
       .bg-icon {
         width: 70%;
         height: 50%;
-        margin: auto;  
+        margin: auto;
         position: absolute;
-        top: 0; 
-        left: 0; 
-        bottom: 0; 
+        top: 0;
+        left: 0;
+        bottom: 0;
         right: 0;
         img {
           width: 100%;
@@ -316,7 +316,7 @@ export default {
         .van-loading__text {
           color: #4ec6ff
         }
-      } 
+      }
     }
   }
 </style>

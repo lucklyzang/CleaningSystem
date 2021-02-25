@@ -26,9 +26,7 @@
         <p class="content-middle-title">任务看板</p>
         <ul class="content-middle-task-name">
           <li v-for="(item,index) in taskList" :key="index" @click="taskClickEvent(item,index)">
-            <span class="task-length" :class="{daskListSignStyle:index == 0 && isExist(item.tit)}" v-show="index == 0 && repairsWorkerOrderCount != 0">{{repairsWorkerOrderCount}}</span>
-            <span class="task-length" :class="{daskListSignStyle:index == 1 && isExist(item.tit)}" v-show="index == 1 && deviceServiceCount != 0">{{deviceServiceCount}}</span>
-            <span class="task-length" :class="{daskListSignStyle:index == 2 && isExist(item.tit)}" v-show="index == 2 && departmentServieCount != 0">{{departmentServieCount}}</span>
+            <span class="task-length" :class="{daskListSignStyle:index == 0 && isExist(item.tit)}" v-show="index == 0 && departmentServieCount != 0">{{departmentServieCount}}</span>
             <p class="task-button-wrapper">
               <img :src="btnTaskWrapperPng" alt="">
             </p>
@@ -59,8 +57,6 @@
   import Loading from '@/components/Loading'
   import store from '@/store'
   import departmentServiceOnePng from '@/common/images/home/department-service-one.png'
-  import deviceServiceOnePng from '@/common/images/home/device-service-one.png'
-  import repairsWorkOrderOnePng from '@/common/images/home/repairs-work-order-one.png'
   import VanFieldSelectPicker from '@/components/VanFieldSelectPicker'
   import { mapGetters, mapMutations } from 'vuex'
   import {queryTaskCount,getNewWork} from '@/api/worker.js'
@@ -80,13 +76,9 @@
         btnIndex: 0,
         noDataShow: false,
         showLoadingHint: false,
-        repairsWorkerOrderCount: '',
         temporaryNumList: [],
-        deviceServiceCount: '',
         departmentServieCount: '',
         taskList: [
-          {tit:'报修工单', imgUrl: repairsWorkOrderOnePng}, 
-          {tit:'设备巡检', imgUrl: deviceServiceOnePng}, 
           {tit:'科室巡检', imgUrl: departmentServiceOnePng}
         ],
         btnList: [
@@ -97,14 +89,14 @@
         btnTaskWrapperPng: require('@/common/images/home/btn-background.png'),
       }
     },
-    
+
     mounted() {
-      this.changeTitleTxt({tit:'工程管理系统'});
-      setStore('currentTitle','工程管理系统');
+      this.changeTitleTxt({tit:'保洁管理系统'});
+      setStore('currentTitle','保洁管理系统');
       // 控制设备物理返回按键
       if (!IsPC()) {
         pushHistory();
-        this.gotoURL(() => { 
+        this.gotoURL(() => {
         })
       };
       // this.temporaryNumList = this.newTaskName;
@@ -120,10 +112,10 @@
       };
       this.getTaskCount(this.proId,this.workerId)
     },
-    
+
     watch: {
     },
-    
+
     computed:{
       ...mapGetters([
         'navTopTitle',
@@ -244,10 +236,10 @@
       getTaskCount (proId,workerId) {
         queryTaskCount(proId,workerId).then((res) => {
           if (res && res.data.code == 200) {
-            const {bxTask, sxTask, kxTask} = res.data.data;
-            this.repairsWorkerOrderCount = bxTask;
-            this.deviceServiceCount = sxTask;
+            const {kxTask} = res.data.data;
             this.departmentServieCount = kxTask
+          } else {
+            this.$toast(`${res.data.msg}`)
           }
         })
         .catch((err) => {
@@ -256,7 +248,7 @@
             closeOnPopstate: true
           }).then(() => {
           })
-        }) 
+        })
       },
 
       // 任务类型点击事件
@@ -401,7 +393,7 @@
      .no-data {
       position: absolute;
       top: 245px;
-      left: 13%;
+      left: 0;
       width: 100%;
       text-align: center;
       z-index: 100
@@ -409,7 +401,7 @@
     .loading {
       position: absolute;
       top: 280px;
-      left: 13%;
+      left: 0;
       width: 100%;
       height: 100px;
       text-align: center;
@@ -589,11 +581,11 @@
               }
             };
             &:last-child {
-              letter-spacing: 5px;              
+              letter-spacing: 5px;
               text-indent: 5px;
               color: #271010;
               font-weight: bold;
-            }  
+            }
           };
           &:first-child {
             left: 0

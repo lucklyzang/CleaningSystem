@@ -27,6 +27,7 @@
         <ul class="content-middle-task-name">
           <li v-for="(item,index) in taskList" :key="index" @click="taskClickEvent(item,index)">
             <span class="task-length" :class="{daskListSignStyle:index == 0 && isExist(item.tit)}" v-show="index == 0 && departmentServieCount != 0">{{departmentServieCount}}</span>
+            <span class="task-length" :class="{daskListSignStyle:index == 1 && isExist(item.tit)}" v-show="index == 1 && repairsWorkerOrderCount != 0">{{repairsWorkerOrderCount}}</span>
             <p class="task-button-wrapper">
               <img :src="btnTaskWrapperPng" alt="">
             </p>
@@ -57,6 +58,7 @@
   import Loading from '@/components/Loading'
   import store from '@/store'
   import departmentServiceOnePng from '@/common/images/home/department-service-one.png'
+  import repairsWorkOrderOnePng from '@/common/images/home/repairs-work-order-one.png'
   import VanFieldSelectPicker from '@/components/VanFieldSelectPicker'
   import { mapGetters, mapMutations } from 'vuex'
   import {queryTaskCount,getNewWork} from '@/api/worker.js'
@@ -76,10 +78,13 @@
         btnIndex: 0,
         noDataShow: false,
         showLoadingHint: false,
+        isTimeoutContinue: true,
         temporaryNumList: [],
         departmentServieCount: '',
+        repairsWorkerOrderCount: '',
         taskList: [
-          {tit:'科室巡检', imgUrl: departmentServiceOnePng}
+          {tit:'科室巡检', imgUrl: departmentServiceOnePng},
+          {tit:'保洁工单', imgUrl: repairsWorkOrderOnePng}
         ],
         btnList: [
           {name: '主页', icon: 'wap-home-o'},
@@ -101,14 +106,15 @@
       };
       // this.temporaryNumList = this.newTaskName;
       // 获取任务数量
-      if (!windowTimer) {
-        // windowTimer = window.setInterval(() => {
-        //   setTimeout(this.getTaskCount(this.proId,this.workerId), 0)
-        // }, 3000);
+     if (!this.globalTimer) {
         windowTimer = window.setInterval(() => {
-          setTimeout(this.queryNewWork(this.proId, this.workerId), 0)
-        }, 3000);
-        this.changeGlobalTimer(windowTimer)
+          if (this.isTimeoutContinue) {
+            setTimeout(this.queryNewWork(this.proId, this.workerId), 0);
+            this.changeGlobalTimer(windowTimer)
+          } else {
+            this.changeGlobalTimer(null)
+          }
+        }, 3000)
       };
       this.getTaskCount(this.proId,this.workerId)
     },
@@ -170,6 +176,7 @@
 
       // 查询是否有新任务
       queryNewWork (proId,workerId) {
+        this.isTimeoutContinue = false;
         let audio = new Audio();
         audio.preloadc = "auto";
         process.env.NODE_ENV == 'development' ? audio.src = "/static/audios/task-info-voice.wav" : audio.src = "/projectWeb/static/audios/task-info-voice.wav";
@@ -179,6 +186,7 @@
             if(windowTimer) {window.clearInterval(windowTimer)}
           };
           if (res && res.data.code == 200) {
+            this.isTimeoutContinue = true;
             Object.keys(res.data.data).forEach((item) => {
               if (item != "all" && res.data.data[item] == true) {
                 this.temporaryNumList = this.newTaskName;
@@ -209,7 +217,7 @@
       // 任务类型转换字母
       taskTypeTransferLetter (type) {
         switch(type) {
-          case '报修工单' :
+          case '保洁工单' :
             return 'bx'
             break;
           case '科室巡检' :
@@ -236,8 +244,9 @@
       getTaskCount (proId,workerId) {
         queryTaskCount(proId,workerId).then((res) => {
           if (res && res.data.code == 200) {
-            const {kxTask} = res.data.data;
-            this.departmentServieCount = kxTask
+            const {bxTask,sxTask,kxTask} = res.data.data;
+            this.departmentServieCount = kxTask;
+            this.repairsWorkerOrderCount = bxTask
           } else {
             this.$toast(`${res.data.msg}`)
           }
@@ -255,7 +264,7 @@
       taskClickEvent (item,index) {
         let currentIndex = this.newTaskName.indexOf(this.taskTypeTransferLetter(item.tit));
         this.temporaryNumList = this.newTaskName;
-        if (item.tit == '报修工单') {
+        if (item.tit == '保洁工单') {
           if (currentIndex != -1) {
             this.temporaryNumList.splice(index,1);
             this.changeNewTaskList(this.temporaryNumList);
@@ -263,8 +272,8 @@
           };
           this.changeIsFreshRepairsWorkOrderPage(true);
           this.$router.push({path: 'repairsWorkOrder'});
-          this.changeTitleTxt({tit:'报修工单'});
-          setStore('currentTitle','报修工单')
+          this.changeTitleTxt({tit:'保洁工单'});
+          setStore('currentTitle','保洁工单')
         } else if (item.tit == '设备巡检') {
           if (currentIndex != -1) {
             this.temporaryNumList.splice(index,1);
@@ -319,11 +328,11 @@
         if (getStore('newTaskList')) {
           this.$store.commit('changeNewTaskList',JSON.parse(getStore('newTaskList'))['taskName']);
         };
-        // 重新存入当前报修工单信息
+        // 重新存入当前保洁工单信息
         if (getStore('repairsWorkOrderMsg')) {
           this.$store.commit('changeRepairsWorkOrderMsg', JSON.parse(getStore('repairsWorkOrderMsg')));
         };
-        // 重新存入当前报修工单上传的图片
+        // 重新存入当前保洁工单上传的图片
         if (getStore('completPhotoInfo')) {
           this.$store.commit('changeIsCompletePhotoList', JSON.parse(getStore('completPhotoInfo'))['photoInfo']);
         };

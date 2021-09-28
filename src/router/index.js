@@ -5,6 +5,9 @@ import store from '@/store'
 const Home = () => import('@/pages/Home')
 const Login = () => import('@/pages/Login')
 const MyInfo = () => import('@/pages/MyInfo')
+const RepairsWorkOrder = () => import('@/pages/taskPage/RepairsWorkOrder')
+const WorkOrderDetails = () => import('@/pages/taskDetailsPage/WorkOrderDetails')
+const WorkOrderSignature = () => import('@/pages/taskMessagePage/workOrderMessage/WorkOrderSignature')
 const DepartmentService = () => import('@/pages/taskPage/DepartmentService')
 const DepartmentWorkOrderDeatils = () => import('@/pages/taskDetailsPage/DepartmentWorkOrderDeatils')
 const DepartmentServiceSignature = () => import('@/pages/taskMessagePage/departmentService/DepartmentServiceSignature')
@@ -27,6 +30,21 @@ let baseRoute  = [
     path: '/myInfo',
     name: 'myInfo',
     component: MyInfo
+  },
+  {
+    path: '/repairsWorkOrder',
+    name: 'repairsWorkOrder',
+    component: RepairsWorkOrder
+  },
+  {
+    path: '/workOrderDetails',
+    name: 'workOrderDetails',
+    component:  WorkOrderDetails
+  },
+  {
+    path: '/workOrderSignature',
+    name: 'workOrderSignature',
+    component:  WorkOrderSignature
   },
   {
     path: '/departmentService',

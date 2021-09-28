@@ -70,11 +70,11 @@ new Vue({
     if (getStore('newTaskList')) {
       store.commit('changeNewTaskList',JSON.parse(getStore('newTaskList'))['taskName']);
     };
-    // 重新存入当前报修工单信息
+    // 重新存入当前保洁工单信息
     if (getStore('repairsWorkOrderMsg')) {
       store.commit('changeRepairsWorkOrderMsg', JSON.parse(getStore('repairsWorkOrderMsg')));
     };
-    // 重新存入当前报修工单上传的图片
+    // 重新存入当前保洁工单上传的图片
     if (getStore('completPhotoInfo')) {
       store.commit('changeIsCompletePhotoList', JSON.parse(getStore('completPhotoInfo'))['photoInfo']);
     };

@@ -195,7 +195,7 @@
   import VanFieldSelectPicker from '@/components/VanFieldSelectPicker'
   import { mapGetters, mapMutations } from 'vuex'
   import {queryOneRepairsProject,uploadRepairsTaskPhoto,queryAllMaterial,queryRepairsTaskPhoto,saveMate,completeRepairsTask,sureStartTask,queryMaterialById} from '@/api/worker.js'
-  import { formatTime, setStore, getStore, removeStore, IsPC, changeArrIndex, removeAllLocalStorage, deepClone, compress } from '@/common/js/utils'
+  import {  setStore, IsPC, deepClone, compress, repeArray } from '@/common/js/utils'
   export default {
     name: 'WorkOrderDetails',
     components:{
@@ -897,14 +897,17 @@
       // 上传图片
       uploadPhoto () {
         let imageType;
+        let temporaryImgList;
         let photoMsg = {
           taskId: this.taskId,  //任务ID
           images: []
         };
         photoMsg.images = [];
         if (this.issueImageList.length > 0) {
+          // 去除重复上传的图片
+          temporaryImgList = repeArray(this.issueImageList)
           imageType = 1;
-          for (let item of this.issueImageList) {
+          for (let item of temporaryImgList) {
             photoMsg.images.push({
               imgType: imageType,
               image: item
@@ -912,8 +915,10 @@
           }
         };
         if (this.completeImageList.length > 0) {
+          // 去除重复上传的图片
+          temporaryImgList = repeArray(this.completeImageList)
           imageType = 2;
-          for (let item of this.completeImageList) {
+          for (let item of temporaryImgList) {
             photoMsg.images.push({
               imgType: imageType,
               image: item
